@@ -7,5 +7,5 @@ const router=Router()
 router.post("/signin",signin)
 router.post("/login",login)
 router.post("/logout",isLogin,logout)
-router.post("/check",isLogin,check)
+router.get("/check",isLogin,check)
 export default router
