@@ -15,7 +15,7 @@ function App() {
       authCheck()
     }
   },[])
-  console.log(!authUser);
+
   
 
   
@@ -24,9 +24,9 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<HomePage/>}/>
-        <Route path='/auth' element={<AuthPage/>}/>
-       <Route path='/main' element={<MainPage/>}/>
+        <Route path='/' element={!authUser?<HomePage/>:<Navigate to={"/main"}/>}/>
+        <Route path='/auth' element={!authUser?<AuthPage/>:<Navigate to={"/main"}/>}/>
+       <Route path='/main' element={authUser?<MainPage/>:<Navigate to={"/auth"}/>}/>
       </Routes>
   
       <Toaster

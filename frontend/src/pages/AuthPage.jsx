@@ -47,6 +47,7 @@ function Auth() {
                         value={username}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full p-3 mb-4 bg-white text-black rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
                     />
                 )}
 
@@ -58,6 +59,7 @@ function Auth() {
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full p-3 mb-4 bg-white text-black rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                
 
                 <input
                     type="password"

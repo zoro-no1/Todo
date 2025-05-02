@@ -24,7 +24,7 @@ const todoStore=create((set,get)=>({
         toast.error("somthing went wrong")
        }
     },
-    delete:async(id)=>{
+    deleteTodo:async(id)=>{
         try {
             const res=await axiosIn.delete(`/todo/delete/${id}`)
             
@@ -32,6 +32,25 @@ const todoStore=create((set,get)=>({
             console.log(error);
             toast.error("somthing went wrong")
         }
+    },
+    filterTodo:async(filter,active)=>{
+      try {
+        let res
+        
+        if(!active){
+          res= await axiosIn.get(`/todo/filter?status=${filter}`)
+          set({todos:res.data.data})
+          
+        }else{
+          res= await axiosIn.get(`/todo/filter?priority=${filter}&status=${active}`)
+          set({todos:res.data.data})
+          
+        }
+        
+      } catch (error) {
+        console.log(error);
+        toast.error("somthing went wrong")
+      }
     }
 
 })) 

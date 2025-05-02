@@ -10,8 +10,8 @@ function HomePage() {
         <h4 className=' mt-3 md:mt-9 text-lg md:text-3xl font-mono w-4/5 m-auto'>
             Create Task . Track Progress
         </h4>
-        <div className='w-1/2 m-auto'>
-        <img className='lg:size-6/12 m-auto' src="/walcome.webp" alt="#" />
+        <div className='w-3/4 m-auto'>
+        <img className='lg:size-1/2  m-auto' src="/walcome.webp" alt="#" />
         </div>
         <Link to="/auth" >
 
