@@ -15,4 +15,12 @@ export const authStore=create((set,get)=>({
             
         }
     },
+    logout : async()=>{
+        try {
+            const res=await axiosIn.post("/auth/logout")
+        } catch (error) {
+            console.log("error");
+            
+        }
+    },
 }))

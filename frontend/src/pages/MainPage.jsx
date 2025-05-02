@@ -3,52 +3,101 @@ import todoStore from "../store/todoStore";
 import { useEffect } from "react";
 
 function MainPage() {
+  // State variables for form inputs and filters
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("Low");
   const [filter, setFilter] = useState("All");
-  const [active, setActive] = useState("Incomplete");
+  const [active, setActive] = useState("All");
 
-  const { getTodo, todos, createTodo, deleteTodo, filterTodo } = todoStore();
+  // Destructure methods and state from the todo store
+  const { getTodo, todos, createTodo, deleteTodo, filterTodo, updateTodo } =
+    todoStore();
 
+  // Fetch todos or apply filters whenever `filter` or `active` changes
   useEffect(() => {
-    if (filter == "All") {
-      filterTodo(active);
+    if (filter === "All") {
+      if (active === "All") {
+        getTodo(); // Fetch all todos
+        return;
+      }
+      filterTodo(`status=${active}`); // Filter by status
     } else {
-      filterTodo(filter, active);
+      if (active === "All") {
+        filterTodo(`priority=${filter}`); // Filter by priority
+        return;
+      }
+      filterTodo(`priority=${filter}`, `status=${active}`); // Filter by both priority and status
       setActive(active);
       setFilter(filter);
     }
   }, [filter, active]);
 
-  
+  // Handle marking a todo as complete or incomplete
+  const handleComplete = async (e, id) => {
+    await updateTodo(id, e.target.value); // Update the todo status
+    if (filter === "All") {
+      if (active === "All") {
+        getTodo(); // Fetch all todos
+        return;
+      }
+      filterTodo(`status=${active}`); // Filter by status
+    } else {
+      if (active === "All") {
+        filterTodo(`priority=${filter}`); // Filter by priority
+        return;
+      }
+      filterTodo(`priority=${filter}`, `status=${active}`); // Filter by both priority and status
+      setActive(active);
+      setFilter(filter);
+    }
+  };
 
+  // Handle form submission to create a new todo
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await createTodo({ title, description, priority });
-    if (filter == "All") {
-      getTodo();
+    await createTodo({ title, description, priority }); // Create a new todo
+    if (filter === "All") {
+      if (active === "All") {
+        getTodo(); // Fetch all todos
+        return;
+      }
+      filterTodo(`status=${active}`); // Filter by status
     } else {
-      filterTodo(filter, active);
+      if (active === "All") {
+        filterTodo(`priority=${filter}`); // Filter by priority
+        return;
+      }
+      filterTodo(`priority=${filter}`, `status=${active}`); // Filter by both priority and status
+      setActive(active);
+      setFilter(filter);
     }
+    // Reset form inputs
     setTitle("");
     setDescription("");
     setPriority("Low");
   };
 
+  // Handle deleting a todo
   const handleDelete = async (id) => {
-    await deleteTodo(id);
-    if (filter == "All") {
-      getTodo();
+    await deleteTodo(id); // Delete the todo
+    if (filter === "All") {
+      if (active === "All") {
+        getTodo(); // Fetch all todos
+        return;
+      }
+      filterTodo(`status=${active}`); // Filter by status
     } else {
-      filterTodo(filter, active);
+      filterTodo(`priority=${filter}`, `status=${active}`); // Filter by both priority and status
+      setActive(active);
+      setFilter(filter);
     }
   };
 
   return (
     <div className="min-h-screen bg-blue-200 p-6">
       <div className="max-w-2xl mx-auto">
-        {/* Form */}
+        {/* Form to create a new todo */}
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-2xl shadow mb-8"
@@ -57,6 +106,7 @@ function MainPage() {
             Create a To-Do
           </h2>
 
+          {/* Input for title */}
           <input
             type="text"
             value={title}
@@ -66,6 +116,7 @@ function MainPage() {
             required
           />
 
+          {/* Input for description */}
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -75,6 +126,7 @@ function MainPage() {
             required
           />
 
+          {/* Dropdown for priority */}
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
@@ -85,6 +137,7 @@ function MainPage() {
             <option>High</option>
           </select>
 
+          {/* Submit button */}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
@@ -93,10 +146,11 @@ function MainPage() {
           </button>
         </form>
 
-        {/* Filter */}
-
+        {/* Filters for priority and status */}
         <div className="flex items-center space-x-4 mb-4">
           <select
+            id="priority"
+            name="priority"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             className="p-2 border rounded-md"
@@ -112,6 +166,7 @@ function MainPage() {
             onChange={(e) => setActive(e.target.value)}
             className="p-2 border rounded-md"
           >
+            <option>All</option>
             <option>Incomplete</option>
             <option>Complete</option>
           </select>
@@ -153,16 +208,30 @@ function MainPage() {
                   >
                     {todo.priority}
                   </span>
+                  <span
+                    className={`inline-block mt-1 ml-2 px-2 py-0.5 text-xs font-medium rounded-full text-white ${
+                      todo.status === "Complete" ? "bg-blue-500" : "bg-gray-400"
+                    }`}
+                  >
+                    {todo.status}
+                  </span>
                 </div>
 
-                <input
-                  type="checkbox"
-                  name="complete"
-                  id="complete"
-                  className="px-3 py-1"
-                  // disabled
-                />
+                {/* Checkbox to mark as complete/incomplete */}
+                
+                  
+                  <input
+                    type="checkbox"
+                    value={
+                      todo.status === "Complete" ? "Incomplete" : "Complete"
+                    }
+                    className=""
+                    onChange={(e) => handleComplete(e, todo._id)}
+                    checked={todo.status === "Complete"}
+                  />
+              
 
+                {/* Delete button */}
                 <button
                   onClick={() => handleDelete(todo._id)}
                   className="ml-4 bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded transition"

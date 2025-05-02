@@ -3,25 +3,30 @@ import { Link } from 'react-router-dom'
 
 function HomePage() {
   return (
-    <div className='w-screen pt-4 bg-blue-200 h-screen' >
-        <h1 className='w-4/5 m-auto text-3xl md:text-6xl  font-mono' >
-            Get Started
+    <div className="w-screen min-h-screen bg-blue-100 pt-10">
+      <div className="max-w-4xl mx-auto px-4 text-center">
+        <h1 className="text-4xl md:text-6xl font-mono font-bold text-gray-800">
+          Get Started
         </h1>
-        <h4 className=' mt-3 md:mt-9 text-lg md:text-3xl font-mono w-4/5 m-auto'>
-            Create Task . Track Progress
+
+        <h4 className="mt-4 md:mt-8 text-lg md:text-2xl font-mono text-gray-700">
+          Create Tasks. Track Progress.
         </h4>
-        <div className='w-3/4 m-auto'>
-        <img className='lg:size-1/2  m-auto' src="/walcome.webp" alt="#" />
-        </div>
-        <Link to="/auth" >
 
-        <div className='w-1/3 m-auto h-16 text-center bg-orange-500 border rounded-xl text-3xl font-medium'>
-            Signin
+        <div className="mt-10 flex justify-center">
+          <img
+            className="w-full max-w-md rounded-xl"
+            src="/walcome.webp"
+            alt="Welcome illustration"
+          />
         </div>
+
+        <Link to="/auth">
+          <button className="mt-10 bg-orange-500 hover:bg-orange-600 text-white text-xl md:text-2xl font-semibold px-8 py-3 rounded-xl shadow transition">
+            Sign In
+          </button>
         </Link>
-
-
-
+      </div>
     </div>
   )
 }
