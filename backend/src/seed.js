@@ -33,7 +33,7 @@ async function seed() {
         title:faker.internet.username(),
         description:faker.internet.username(),
         status:"Incomplete",
-        Priority:"Low",
+        priority:"Low",
        owner:id
       })
     }
