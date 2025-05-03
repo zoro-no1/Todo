@@ -116,7 +116,6 @@ export const filter = async (req, res) => {
     if (!req.query) {
         return res.status(400).json({ error: "Filter parameter not available." });
     }
- console.log(req.query);
  
     try {
         // Use $and to combine owner filter with other query filters

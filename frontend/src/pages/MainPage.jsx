@@ -1,6 +1,7 @@
 import { useState } from "react";
 import todoStore from "../store/todoStore";
 import { useEffect } from "react";
+import useSearchTodo from "../util/useSearchTodo"
 
 function MainPage() {
   // State variables for form inputs and filters
@@ -10,68 +11,34 @@ function MainPage() {
   const [filter, setFilter] = useState("All");
   const [active, setActive] = useState("All");
 
+  const searchTool=useSearchTodo()//use Costume hooks
+
   // Destructure methods and state from the todo store
   const { getTodo, todos, createTodo, deleteTodo, filterTodo, updateTodo } =
     todoStore();
 
   // Fetch todos or apply filters whenever `filter` or `active` changes
   useEffect(() => {
-    if (filter === "All") {
-      if (active === "All") {
-        getTodo(); // Fetch all todos
-        return;
-      }
-      filterTodo(`status=${active}`); // Filter by status
-    } else {
-      if (active === "All") {
-        filterTodo(`priority=${filter}`); // Filter by priority
-        return;
-      }
-      filterTodo(`priority=${filter}`, `status=${active}`); // Filter by both priority and status
-      setActive(active);
-      setFilter(filter);
-    }
+   searchTool(filter,active)
+    setActive(active);
+    setFilter(filter);
   }, [filter, active]);
 
   // Handle marking a todo as complete or incomplete
   const handleComplete = async (e, id) => {
     await updateTodo(id, e.target.value); // Update the todo status
-    if (filter === "All") {
-      if (active === "All") {
-        getTodo(); // Fetch all todos
-        return;
-      }
-      filterTodo(`status=${active}`); // Filter by status
-    } else {
-      if (active === "All") {
-        filterTodo(`priority=${filter}`); // Filter by priority
-        return;
-      }
-      filterTodo(`priority=${filter}`, `status=${active}`); // Filter by both priority and status
-      setActive(active);
-      setFilter(filter);
-    }
+    searchTool(filter,active)
+    setActive(active);
+    setFilter(filter);
   };
 
   // Handle form submission to create a new todo
   const handleSubmit = async (e) => {
     e.preventDefault();
     await createTodo({ title, description, priority }); // Create a new todo
-    if (filter === "All") {
-      if (active === "All") {
-        getTodo(); // Fetch all todos
-        return;
-      }
-      filterTodo(`status=${active}`); // Filter by status
-    } else {
-      if (active === "All") {
-        filterTodo(`priority=${filter}`); // Filter by priority
-        return;
-      }
-      filterTodo(`priority=${filter}`, `status=${active}`); // Filter by both priority and status
-      setActive(active);
-      setFilter(filter);
-    }
+    searchTool(filter,active)
+    setActive(active);
+    setFilter(filter);
     // Reset form inputs
     setTitle("");
     setDescription("");
@@ -81,17 +48,9 @@ function MainPage() {
   // Handle deleting a todo
   const handleDelete = async (id) => {
     await deleteTodo(id); // Delete the todo
-    if (filter === "All") {
-      if (active === "All") {
-        getTodo(); // Fetch all todos
-        return;
-      }
-      filterTodo(`status=${active}`); // Filter by status
-    } else {
-      filterTodo(`priority=${filter}`, `status=${active}`); // Filter by both priority and status
-      setActive(active);
-      setFilter(filter);
-    }
+    searchTool(filter,active)
+    setActive(active);
+    setFilter(filter);
   };
 
   return (

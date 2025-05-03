@@ -40,6 +40,8 @@ const todoStore = create((set, get) => ({
 
   // Filter todos based on criteria
   filterTodo: async (filter, active) => {
+    console.log(filter,active);
+    
     try {
       let res;
       if (!active) {
